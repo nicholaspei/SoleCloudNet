@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>$id$</id>
+    <version>$version$</version>
+    <title>$title$</title>
+    <authors>yixincapital</authors>
+    <owners>yixincapital</owners>
+    <licenseUrl>http://www.apache.org/licenses/LICENSE-2.0</licenseUrl>
+    <projectUrl>http://chedai.bitauto.com</projectUrl>
+    <iconUrl>http://www.bitauto.com/favicon.ico</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>solrnet cloud for extenal api</description>
+    <releaseNotes>solrnet cloud for extenal api.</releaseNotes>
+    <copyright>Copyright 2015</copyright>
+    <tags>cloud nosql</tags>
+  </metadata>
+</package>
