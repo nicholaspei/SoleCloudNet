@@ -32,7 +32,7 @@ namespace SolrNet.Cloud.ZooKeeperClient {
         }
 
         public void Add(IPEndPoint endPoint)
-        {
+        { 
             this.Add(new ZooKeeperEndpoint(endPoint, backoffInterval));
         }
 

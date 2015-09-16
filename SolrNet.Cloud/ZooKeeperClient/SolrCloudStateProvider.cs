@@ -1,10 +1,12 @@
 ﻿using System;
 using System.IO;
 using System.Text;
+using Enyim.Caching;
 using ZooKeeperNet;
 
 namespace SolrNet.Cloud.ZooKeeperClient {
     public class SolrCloudStateProvider : ISolrCloudStateProvider, IWatcher {
+        private static readonly string SECTION_NAME = "enyim.com/memcached";
         public SolrCloudStateProvider(string zooKeeperConnection)
         {
             if (string.IsNullOrEmpty(zooKeeperConnection))
@@ -76,26 +78,25 @@ namespace SolrNet.Cloud.ZooKeeperClient {
 
         private void Update()
         {
-            if (zooKeeper == null)
-                zooKeeper = new ZooKeeper(
-                    zooKeeperConnection, 
-                    TimeSpan.FromSeconds(10), this);
-            var currentState = zooKeeper.State.State;
-            state = SolrCloudStateParser.Parse(
-                Encoding.Default.GetString(
-                    zooKeeper.GetData("/collections/dealerprice/state.json", true, null)));
+            //if (zooKeeper == null)
+            //    zooKeeper = new ZooKeeper(
+            //        zooKeeperConnection, 
+            //        TimeSpan.FromSeconds(10), this);
+            //var currentState = zooKeeper.State.State;
+            //state = SolrCloudStateParser.Parse(
+            //    Encoding.Default.GetString(
+            //        zooKeeper.GetData("/collections/dealerprice/state.json", true, null)));
         //    state=SolrCloudStateParser.Parse(GetState());
         }
 
         private void Update(string collection)
-        {
-        
-            if (zooKeeper == null)
-                zooKeeper = new ZooKeeper(
-                    zooKeeperConnection,
-                    TimeSpan.FromSeconds(10), this);
+        {         
+            //if (zooKeeper == null)
+            //    zooKeeper = new ZooKeeper(
+            //        zooKeeperConnection,
+            //        TimeSpan.FromSeconds(10), this);
             //var data = Encoding.Default.GetString(
-            //    zooKeeper.GetData(string.Format("/collections/{0}/state.json", collection), true, null));
+            //  zooKeeper.GetData(string.Format("/collections/{0}/state.json", collection), true, null));
             var data = GetJson();        
             state = SolrCloudStateParser.Parse(data);
             
@@ -103,9 +104,14 @@ namespace SolrNet.Cloud.ZooKeeperClient {
         }
 
         private string GetJson() {
+            var internalContainer = new MemcachedClient(SECTION_NAME);
+            var text = internalContainer.Get("solrcloud-state");
+            if(text==null)
+            { 
             var baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
-            string text = System.IO.File.ReadAllText(baseDirectory+"\\clusterstate.json");
-            return text;
+             text = System.IO.File.ReadAllText(baseDirectory+"\\clusterstate.json");
+            }
+            return text.ToString();
         }
     }
 }
